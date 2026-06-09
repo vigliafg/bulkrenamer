@@ -12,27 +12,27 @@ class StripRule(RenameRule):
                 "positioning": "everywhere", "invert": False, "case_sensitive": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Caratteri personalizzati:"))
+        layout.addWidget(QLabel("Custom characters:"))
         self._chars = QLineEdit()
-        self._chars.setPlaceholderText("Caratteri da rimuovere...")
+        self._chars.setPlaceholderText("Characters to remove...")
         layout.addWidget(self._chars)
 
-        layout.addWidget(QLabel("Set predefiniti (seleziona uno o piu' nei menu):"))
-        self._digits = QCheckBox("Cifre (0-9)")
+        layout.addWidget(QLabel("Predefined sets (check one or more):"))
+        self._digits = QCheckBox("Digits (0-9)")
         layout.addWidget(self._digits)
-        self._symbols = QCheckBox("Simboli (!\"#$%...)")
+        self._symbols = QCheckBox("Symbols (!\"#$%...)")
         layout.addWidget(self._symbols)
-        self._english = QCheckBox("Caratteri inglesi (a-z)")
+        self._english = QCheckBox("English letters (a-z)")
         layout.addWidget(self._english)
-        self._brackets = QCheckBox("Parentesi (){}[]<>")
+        self._brackets = QCheckBox("Brackets (){}[]<>")
         layout.addWidget(self._brackets)
 
-        layout.addWidget(QLabel("Posizione:"))
+        layout.addWidget(QLabel("Position:"))
         self._pos = QComboBox()
         self._pos.addItems(["everywhere", "leading", "trailing"])
         layout.addWidget(self._pos)
 
-        self._inv = QCheckBox("Inverti (tieni solo i caratteri selezionati)")
+        self._inv = QCheckBox("Invert (keep only selected characters)")
         layout.addWidget(self._inv)
         self._cs = QCheckBox("Case sensitive")
         layout.addWidget(self._cs)

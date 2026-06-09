@@ -12,21 +12,21 @@ class PaddingRule(RenameRule):
                 "length": 3, "pad_char": " ", "position": "left"}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Modalita':"))
+        layout.addWidget(QLabel("Mode:"))
         self._mode = QComboBox()
         self._mode.addItems(["add_zero", "remove_zero", "text_padding"])
         self._mode.currentTextChanged.connect(self._upd)
         layout.addWidget(self._mode)
 
-        layout.addWidget(QLabel("Lunghezza:"))
+        layout.addWidget(QLabel("Length:"))
         self._len = QSpinBox(); self._len.setRange(0, 999); self._len.setValue(3)
         layout.addWidget(self._len)
 
-        layout.addWidget(QLabel("Carattere di padding:"))
+        layout.addWidget(QLabel("Padding character:"))
         self._char = QLineEdit(); self._char.setText(" ")
         layout.addWidget(self._char)
 
-        layout.addWidget(QLabel("Posizione:"))
+        layout.addWidget(QLabel("Position:"))
         self._pos = QComboBox(); self._pos.addItems(["left", "right"])
         layout.addWidget(self._pos)
         self._upd()

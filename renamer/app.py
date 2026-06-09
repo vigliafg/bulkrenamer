@@ -35,7 +35,7 @@ class BulkRenamerProApp(QMainWindow):
         self.setStyleSheet(QSS)
 
         self._files: list[str] = []
-        self._display_names: list[str] = []  # basenames to show in "Nome originale" column
+        self._display_names: list[str] = []  # basenames to show in "Original name" column
         self._undo = UndoManager()
         self._rules: list[RenameRule] = []
         self._rule_widgets: list[QWidget] = []
@@ -55,30 +55,30 @@ class BulkRenamerProApp(QMainWindow):
         mb = self.menuBar()
 
         file_menu = mb.addMenu("File")
-        file_menu.addAction("📂 Apri cartella...", self._open_folder)
-        file_menu.addAction("📄 Aggiungi file...", self._add_files)
+        file_menu.addAction("📂 Open folder...", self._open_folder)
+        file_menu.addAction("📄 Add files...", self._add_files)
         file_menu.addSeparator()
-        file_menu.addAction("💾 Salva preset...", self._save_preset)
-        file_menu.addAction("📂 Carica preset...", self._load_preset)
+        file_menu.addAction("💾 Save preset...", self._save_preset)
+        file_menu.addAction("📂 Load preset...", self._load_preset)
         file_menu.addSeparator()
-        file_menu.addAction("Esci", self.close)
+        file_menu.addAction("Exit", self.close)
 
-        rules_menu = mb.addMenu("Regole")
+        rules_menu = mb.addMenu("Rules")
         for rule_cls in ALL_RULES:
-            action = rules_menu.addAction(f"{rule_cls.icon} Aggiungi {rule_cls.name}",
+            action = rules_menu.addAction(f"{rule_cls.icon} Add {rule_cls.name}",
                                           lambda rc=rule_cls: self._add_rule(rc))
         rules_menu.addSeparator()
-        rules_menu.addAction("🗑 Rimuovi tutte le regole", self._clear_rules)
+        rules_menu.addAction("🗑 Remove all rules", self._clear_rules)
 
-        tools_menu = mb.addMenu("Strumenti")
-        tools_menu.addAction("▶ Anteprima", self._refresh_preview)
-        tools_menu.addAction("✅ Rinomina!", self._rename)
-        tools_menu.addAction("↩ Annulla", self._undo_last)
+        tools_menu = mb.addMenu("Tools")
+        tools_menu.addAction("▶ Preview", self._refresh_preview)
+        tools_menu.addAction("✅ Rename!", self._rename)
+        tools_menu.addAction("↩ Undo", self._undo_last)
         tools_menu.addSeparator()
         tools_menu.addAction("↺ Factory Reset", self._factory_reset)
 
-        help_menu = mb.addMenu("Aiuto")
-        help_menu.addAction("ℹ Informazioni", self._show_about)
+        help_menu = mb.addMenu("Help")
+        help_menu.addAction("ℹ About", self._show_about)
 
     # ── Toolbar ───────────────────────────────────────────────────────────
 
@@ -87,10 +87,10 @@ class BulkRenamerProApp(QMainWindow):
         tb.setMovable(False)
         self.addToolBar(Qt.ToolBarArea.TopToolBarArea, tb)
 
-        tb.addWidget(self._tbtn("📂 Cartella", self._open_folder, 120))
-        tb.addWidget(self._tbtn("📄 File", self._add_files, 90))
+        tb.addWidget(self._tbtn("📂 Folder", self._open_folder, 120))
+        tb.addWidget(self._tbtn("📄 Files", self._add_files, 90))
         tb.addSeparator()
-        tb.addWidget(self._tbtn_colored("▶ Anteprima", self._refresh_preview, 110, "info"))
+        tb.addWidget(self._tbtn_colored("▶ Preview", self._refresh_preview, 110, "info"))
 
     def _tbtn(self, text: str, callback, width: int = 100) -> QPushButton:
         b = QPushButton(text)
@@ -150,14 +150,14 @@ class BulkRenamerProApp(QMainWindow):
 
         # Buttons under preview
         btn_row = QHBoxLayout()
-        rem_btn = self._tbtn("🗑 Rimuovi selezionati", self._remove_checked, 180)
-        rem_btn.setToolTip("Rimuove i file selezionati solo dalla lista — non cancella i file dal disco")
+        rem_btn = self._tbtn("🗑 Remove selected", self._remove_checked, 180)
+        rem_btn.setToolTip("Removes selected files from the list only — does not delete files from disk")
         btn_row.addWidget(rem_btn)
-        btn_row.addWidget(self._tbtn("🔃 Ordina per nome", self._sort_by_name, 150))
+        btn_row.addWidget(self._tbtn("🔃 Sort by name", self._sort_by_name, 150))
         btn_row.addStretch()
-        self._rename_btn = self._tbtn_colored("✅ Rinomina (0)", self._rename, 155, "danger")
+        self._rename_btn = self._tbtn_colored("✅ Rename (0)", self._rename, 155, "danger")
         btn_row.addWidget(self._rename_btn)
-        btn_row.addWidget(self._tbtn_colored("↩ Annulla", self._undo_last, 100, "success"))
+        btn_row.addWidget(self._tbtn_colored("↩ Undo", self._undo_last, 100, "success"))
         right_layout.addLayout(btn_row)
 
         splitter.addWidget(right)
@@ -169,7 +169,7 @@ class BulkRenamerProApp(QMainWindow):
 
     def _build_statusbar(self) -> None:
         self._status = QStatusBar()
-        self._status.showMessage("Nessun file caricato. | Pronto.")
+        self._status.showMessage("No files loaded. | Ready.")
         self._last_changed = 0
         self._last_conflicts = 0
         self.setStatusBar(self._status)
@@ -197,7 +197,7 @@ class BulkRenamerProApp(QMainWindow):
         icon_label.setStyleSheet(f"font-size: 16px;")
         name_label = QLabel(rule_cls.name)
         name_label.setStyleSheet(f"font-weight: bold; color: {C['blue']}; font-size: 13px;")
-        enable_cb = QCheckBox("Abilitata")
+        enable_cb = QCheckBox("Enabled")
         enable_cb.setChecked(True)
         enable_cb.toggled.connect(lambda v, r=rule: r.set_enabled(v))
 
@@ -252,7 +252,7 @@ class BulkRenamerProApp(QMainWindow):
     # ── File management ───────────────────────────────────────────────────
 
     def _open_folder(self) -> None:
-        folder = QFileDialog.getExistingDirectory(self, "Seleziona cartella")
+        folder = QFileDialog.getExistingDirectory(self, "Select folder")
         if not folder:
             return
         self._files = sorted(
@@ -262,10 +262,10 @@ class BulkRenamerProApp(QMainWindow):
         )
         self._display_names = [os.path.basename(f) for f in self._files]
         self._refresh_preview()
-        self._status.showMessage(f"{len(self._files)} file da: {folder}")
+        self._status.showMessage(f"{len(self._files)} files from: {folder}")
 
     def _add_files(self) -> None:
-        files, _ = QFileDialog.getOpenFileNames(self, "Aggiungi file")
+        files, _ = QFileDialog.getOpenFileNames(self, "Add files")
         if not files:
             return
         existing = set(self._files)
@@ -273,13 +273,13 @@ class BulkRenamerProApp(QMainWindow):
         self._files.extend(new_files)
         self._display_names.extend(os.path.basename(f) for f in new_files)
         self._refresh_preview()
-        self._status.showMessage(f"{len(self._files)} file totali.")
+        self._status.showMessage(f"{len(self._files)} total files.")
 
     def _clear_files(self) -> None:
         self._files.clear()
         self._display_names.clear()
         self._preview_table.clear()
-        self._status.showMessage("Lista svuotata.")
+        self._status.showMessage("List cleared.")
 
     def _remove_checked(self) -> None:
         """Remove checked files from the list."""
@@ -303,11 +303,11 @@ class BulkRenamerProApp(QMainWindow):
         total = len(self._files)
         if total == 0:
             return
-        self._rename_btn.setText(f"✅ Rinomina ({checked})")
+        self._rename_btn.setText(f"✅ Rename ({checked})")
         self._status.showMessage(
-            f"☑ {checked}/{total} selezionati · "
-            f"{self._last_changed} da rinominare · "
-            f"{self._last_conflicts} conflitti"
+            f"☑ {checked}/{total} selected · "
+            f"{self._last_changed} to rename · "
+            f"{self._last_conflicts} conflicts"
         )
 
     # ── Preview ───────────────────────────────────────────────────────────
@@ -322,10 +322,10 @@ class BulkRenamerProApp(QMainWindow):
         new_names: list[str] = []
         for i, fp in enumerate(self._files):
             try:
-                nuovo = apply_rules_stack(fp, rules, i, total)
+                new_name = apply_rules_stack(fp, rules, i, total)
             except Exception as e:
-                nuovo = f"[ERRORE: {e}]"
-            new_names.append(nuovo)
+                new_name = f"[ERROR: {e}]"
+            new_names.append(new_name)
 
         # Detect conflicts (duplicate new names)
         seen: dict[str, int] = {}
@@ -361,23 +361,23 @@ class BulkRenamerProApp(QMainWindow):
         checked = len(checked_set)
         self._last_changed = changed
         self._last_conflicts = len(conflicts)
-        self._rename_btn.setText(f"✅ Rinomina ({checked})")
+        self._rename_btn.setText(f"✅ Rename ({checked})")
         self._status.showMessage(
-            f"☑ {checked}/{total} selezionati · {changed} da rinominare · {len(conflicts)} conflitti"
+            f"☑ {checked}/{total} selected · {changed} to rename · {len(conflicts)} conflicts"
         )
 
     # ── Rename ────────────────────────────────────────────────────────────
 
     def _rename(self) -> None:
         if not self._files:
-            QMessageBox.warning(self, "Bulk Renamer", "Nessun file nella lista.")
+            QMessageBox.warning(self, "Bulk Renamer", "No files in the list.")
             return
 
-        # Rinomina solo i file selezionati con la checkbox
+        # Rename only files selected via checkbox
         checked = self._preview_table.checked_paths()
         if not checked:
             QMessageBox.warning(self, "Bulk Renamer",
-                "Nessun file selezionato.\nSpunta le checkbox nella preview per selezionare i file da rinominare.")
+                "No files selected.\nCheck the boxes in the preview to select files to rename.")
             return
 
         rules = self._collect_rules()
@@ -389,17 +389,17 @@ class BulkRenamerProApp(QMainWindow):
 
         new_names = [n for _, n in pairs]
         if len(set(new_names)) < len(new_names):
-            QMessageBox.critical(self, "Conflitti",
-                "Nomi duplicati nel risultato.\nRisolvi i conflitti prima di procedere.")
+            QMessageBox.critical(self, "Conflicts",
+                "Duplicate names in result.\nResolve conflicts before proceeding.")
             return
 
         to_change = [(fp, n) for fp, n in pairs if os.path.basename(fp) != n]
         if not to_change:
-            QMessageBox.information(self, "Bulk Renamer", "Nessun file da rinominare.")
+            QMessageBox.information(self, "Bulk Renamer", "No files to rename.")
             return
 
-        reply = QMessageBox.question(self, "Conferma",
-            f"Rinominare {len(to_change)} file?\nOperazione reversibile con Annulla.",
+        reply = QMessageBox.question(self, "Confirm",
+            f"Rename {len(to_change)} files?\nReversible operation with Undo.",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply != QMessageBox.StandardButton.Yes:
             return
@@ -418,43 +418,43 @@ class BulkRenamerProApp(QMainWindow):
             self._undo.push(done)
 
         self._refresh_preview()
-        msg = f"✅ Rinominati: {len(done)} file."
+        msg = f"✅ Renamed: {len(done)} files."
         if errors:
-            msg += f"\n\n⚠ Errori ({len(errors)}):\n" + "\n".join(errors[:10])
-        QMessageBox.information(self, "Completato", msg)
+            msg += f"\n\n⚠ Errors ({len(errors)}):\n" + "\n".join(errors[:10])
+        QMessageBox.information(self, "Done", msg)
 
     def _undo_last(self) -> None:
         if not self._undo.can_undo():
-            QMessageBox.information(self, "Annulla", "Nessuna operazione da annullare.")
+            QMessageBox.information(self, "Undo", "No operation to undo.")
             return
         restored, errors = self._undo.undo_last(self._files)
         self._refresh_preview()
-        msg = f"↩ Ripristinati: {restored} file."
+        msg = f"↩ Restored: {restored} files."
         if errors:
-            msg += f"\n\n⚠ Errori:\n" + "\n".join(errors[:10])
-        QMessageBox.information(self, "Annulla", msg)
+            msg += f"\n\n⚠ Errors:\n" + "\n".join(errors[:10])
+        QMessageBox.information(self, "Undo", msg)
 
     # ── Preset ────────────────────────────────────────────────────────────
 
     def _save_preset(self) -> None:
-        name, ok = QInputDialog.getText(self, "Salva Preset", "Nome del preset:")
+        name, ok = QInputDialog.getText(self, "Save Preset", "Preset name:")
         if not ok or not name:
             return
         path, _ = QFileDialog.getSaveFileName(
-            self, "Salva preset", f"{name}.json", "JSON (*.json)")
+            self, "Save preset", f"{name}.json", "JSON (*.json)")
         if not path:
             return
         preset = {"name": name, "rules": [r.get_config() for r in self._rules]}
         try:
             with open(path, "w", encoding="utf-8") as f:
                 json.dump(preset, f, indent=2, ensure_ascii=False)
-            QMessageBox.information(self, "Preset", f"Preset '{name}' salvato!")
+            QMessageBox.information(self, "Preset", f"Preset '{name}' saved!")
         except Exception as e:
-            QMessageBox.critical(self, "Errore", f"Impossibile salvare: {e}")
+            QMessageBox.critical(self, "Error", f"Cannot save: {e}")
 
     def _load_preset(self) -> None:
         path, _ = QFileDialog.getOpenFileName(
-            self, "Carica preset", os.path.expanduser("~"), "JSON (*.json)")
+            self, "Load preset", os.path.expanduser("~"), "JSON (*.json)")
         if not path:
             return
         try:
@@ -471,9 +471,9 @@ class BulkRenamerProApp(QMainWindow):
                     # Quick path: just add with config
                     self._add_rule_with_config(rule_cls, cfg)
             name = preset.get("name", os.path.basename(path))
-            QMessageBox.information(self, "Preset", f"Preset '{name}' caricato!")
+            QMessageBox.information(self, "Preset", f"Preset '{name}' loaded!")
         except Exception as e:
-            QMessageBox.critical(self, "Errore", f"Impossibile caricare: {e}")
+            QMessageBox.critical(self, "Error", f"Cannot load: {e}")
 
     def _add_rule_with_config(self, rule_cls: type[RenameRule], config: dict) -> None:
         """Add a rule and immediately set its config."""
@@ -484,27 +484,27 @@ class BulkRenamerProApp(QMainWindow):
     # ── Factory reset ─────────────────────────────────────────────────────
 
     def _factory_reset(self) -> None:
-        reply = QMessageBox.question(self, "Ripristino",
-            "Ripristinare TUTTE le regole ai valori di default?\n"
-            "Questa azione non puo' essere annullata.",
+        reply = QMessageBox.question(self, "Reset",
+            "Reset ALL rules to default values?\n"
+            "This action cannot be undone.",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if reply != QMessageBox.StandardButton.Yes:
             return
         self._clear_rules()
         self._add_rule()
-        QMessageBox.information(self, "Ripristino", "Regole ripristinate ai default.")
+        QMessageBox.information(self, "Reset", "Rules reset to defaults.")
 
     def _show_about(self) -> None:
         QMessageBox.about(self, "Bulk File Renamer PRO",
             "Bulk File Renamer PRO v3.0 (PyQt6)\n\n"
-            "Clone di ReNamer (den4b.com) con tutte le 17 regole.\n"
-            "Tema: Catppuccin Mocha\n"
-            "Basato su PyQt6.\n\n"
-            "Funzionalita' principali:\n"
-            "• 17 regole di rinominazione\n"
-            "• Stack di regole componibili\n"
-            "• Preview live con colori per colonna\n"
-            "• Undo illimitato\n"
-            "• Preset salvabili\n"
-            "• Tema scuro Catppuccin Mocha\n\n"
-            "Dipendenze: pip install PyQt6")
+            "Clone of ReNamer (den4b.com) with all 17 rules.\n"
+            "Theme: Catppuccin Mocha\n"
+            "Built with PyQt6.\n\n"
+            "Key features:\n"
+            "• 17 rename rules\n"
+            "• Composable rule stack\n"
+            "• Live preview with per-column coloring\n"
+            "• Unlimited undo\n"
+            "• Saveable presets\n"
+            "• Catppuccin Mocha dark theme\n\n"
+            "Dependencies: pip install PyQt6")

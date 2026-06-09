@@ -37,7 +37,7 @@ class PreviewTable(QWidget):
         hdr = QWidget()
         hdr_layout = QVBoxLayout(hdr)
         hdr_layout.setContentsMargins(0, 0, 0, 4)
-        title = QLabel("FILE  /  ANTEPRIMA RINOMINA")
+        title = QLabel("FILES  /  RENAME PREVIEW")
         title.setProperty("heading", True)
         self._conflict_label = QLabel("")
         self._conflict_label.setProperty("conflict", True)
@@ -48,9 +48,9 @@ class PreviewTable(QWidget):
         hdr_layout.addLayout(hdr_row)
         layout.addWidget(hdr)
 
-        # Table (4 columns: ☑ | Nome originale | Nuovo nome | Stato)
+        # Table (4 columns: ☑ | Original name | New name | Status)
         self._table = QTableWidget(0, 4)
-        self._table.setHorizontalHeaderLabels(["☑", "Nome originale", "Nuovo nome", "Stato"])
+        self._table.setHorizontalHeaderLabels(["☑", "Original name", "New name", "Status"])
         self._table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self._table.setColumnWidth(0, 36)
         self._table.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -80,13 +80,13 @@ class PreviewTable(QWidget):
         detail_layout = QVBoxLayout(self._detail_frame)
         detail_layout.setContentsMargins(12, 8, 12, 8)
 
-        dl1 = QLabel("📂 Percorso originale:")
+        dl1 = QLabel("📂 Original path:")
         dl1.setStyleSheet(f"font-weight: bold; color: {C['blue']}; font-size: 11px;")
         self._detail_orig = QLabel("")
         self._detail_orig.setStyleSheet(f"color: {C['text']}; font-size: 10px;")
         self._detail_orig.setWordWrap(True)
 
-        dl2 = QLabel("🔄 Nuovo percorso:")
+        dl2 = QLabel("🔄 New path:")
         dl2.setStyleSheet(f"font-weight: bold; color: {C['green']}; font-size: 11px;")
         self._detail_new = QLabel("")
         self._detail_new.setStyleSheet(f"color: {C['text']}; font-size: 10px;")
@@ -136,7 +136,7 @@ class PreviewTable(QWidget):
 
             # Column 3 — status
             if is_conflict:
-                stato = "⚠ duplicato"
+                stato = "⚠ duplicate"
                 stato_color = C["red"]
             elif is_changed:
                 stato = "✓"
@@ -170,7 +170,7 @@ class PreviewTable(QWidget):
         # Update conflict label
         if conflicts_set:
             self._conflict_label.setText(
-                f"⚠ {len(conflicts_set) if isinstance(conflicts_set, set) else sum(1 for n in new_names if n in conflicts_set)} conflitti — rinomina bloccata"
+                f"⚠ {len(conflicts_set) if isinstance(conflicts_set, set) else sum(1 for n in new_names if n in conflicts_set)} conflicts — rename blocked"
             )
         else:
             self._conflict_label.setText("")

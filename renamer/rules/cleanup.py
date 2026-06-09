@@ -13,21 +13,21 @@ class CleanUpRule(RenameRule):
                 "strip_emoji": False, "strip_marks": False, "camel_case_split": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Rimuovi contenuto parentesi:"))
-        self._cb1 = QCheckBox("Rotonde (...)"); layout.addWidget(self._cb1)
-        self._cb2 = QCheckBox("Quadre [...]"); layout.addWidget(self._cb2)
-        self._cb3 = QCheckBox("Graffe {...}"); layout.addWidget(self._cb3)
+        layout.addWidget(QLabel("Remove bracket content:"))
+        self._cb1 = QCheckBox("Round (...)"); layout.addWidget(self._cb1)
+        self._cb2 = QCheckBox("Square [...]"); layout.addWidget(self._cb2)
+        self._cb3 = QCheckBox("Curly {...}"); layout.addWidget(self._cb3)
 
-        layout.addWidget(QLabel("Sostituisci con spazi (caratteri):"))
-        self._rws = QLineEdit(); self._rws.setPlaceholderText("es: ._-")
+        layout.addWidget(QLabel("Replace with spaces (characters):"))
+        self._rws = QLineEdit(); self._rws.setPlaceholderText("e.g. ._-")
         layout.addWidget(self._rws)
 
-        self._fs = QCheckBox("Correggi spazi multipli")
+        self._fs = QCheckBox("Fix multiple spaces")
         self._fs.setChecked(True); layout.addWidget(self._fs)
-        self._nu = QCheckBox("Normalizza spazi unicode"); layout.addWidget(self._nu)
-        self._se = QCheckBox("Rimuovi emoji"); layout.addWidget(self._se)
-        self._sm = QCheckBox("Rimuovi segni unicode (diacritici)"); layout.addWidget(self._sm)
-        self._cc = QCheckBox("Separa CamelCase (Camel Case)"); layout.addWidget(self._cc)
+        self._nu = QCheckBox("Normalize unicode spaces"); layout.addWidget(self._nu)
+        self._se = QCheckBox("Remove emoji"); layout.addWidget(self._se)
+        self._sm = QCheckBox("Remove unicode marks (diacritics)"); layout.addWidget(self._sm)
+        self._cc = QCheckBox("Split CamelCase (Camel Case)"); layout.addWidget(self._cc)
 
     def get_config(self):
         bk = []

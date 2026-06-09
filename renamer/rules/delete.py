@@ -14,7 +14,7 @@ class DeleteRule(RenameRule):
                 "delete_current_name": False, "rtl": False, "keep_delimiters": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Da (From):"))
+        layout.addWidget(QLabel("From:"))
         self._from_mode = QComboBox()
         self._from_mode.addItems(["position", "delimiter"])
         self._from_mode.currentTextChanged.connect(self._upd)
@@ -24,10 +24,10 @@ class DeleteRule(RenameRule):
         self._from_val.setValue(1)
         layout.addWidget(self._from_val)
         self._from_delim = QLineEdit()
-        self._from_delim.setPlaceholderText("Delimitatore...")
+        self._from_delim.setPlaceholderText("Delimiter...")
         layout.addWidget(self._from_delim)
 
-        layout.addWidget(QLabel("Fino a (Until):"))
+        layout.addWidget(QLabel("Until:"))
         self._until_mode = QComboBox()
         self._until_mode.addItems(["count", "delimiter", "end"])
         self._until_mode.currentTextChanged.connect(self._upd)
@@ -36,14 +36,14 @@ class DeleteRule(RenameRule):
         self._until_val.setRange(0, 9999)
         layout.addWidget(self._until_val)
         self._until_delim = QLineEdit()
-        self._until_delim.setPlaceholderText("Delimitatore...")
+        self._until_delim.setPlaceholderText("Delimiter...")
         layout.addWidget(self._until_delim)
 
-        self._delete_all = QCheckBox("Elimina nome corrente")
+        self._delete_all = QCheckBox("Delete current name")
         layout.addWidget(self._delete_all)
-        self._rtl = QCheckBox("Da destra a sinistra")
+        self._rtl = QCheckBox("Right to left")
         layout.addWidget(self._rtl)
-        self._keep = QCheckBox("Mantieni delimitatori")
+        self._keep = QCheckBox("Keep delimiters")
         layout.addWidget(self._keep)
         self._upd()
 

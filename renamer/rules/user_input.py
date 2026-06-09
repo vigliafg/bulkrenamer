@@ -11,9 +11,9 @@ class UserInputRule(RenameRule):
         return {"type": "UserInput", "enabled": True, "names": []}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Lista nuovi nomi (uno per riga):"))
+        layout.addWidget(QLabel("New names list (one per line):"))
         self._text = QTextEdit()
-        self._text.setPlaceholderText("nuovo_nome1.txt\nnuovo_nome2.txt\nnuovo_nome3.txt")
+        self._text.setPlaceholderText("new_name1.txt\nnew_name2.txt\nnew_name3.txt")
         layout.addWidget(self._text)
 
     def get_config(self):

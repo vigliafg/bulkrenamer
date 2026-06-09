@@ -14,33 +14,33 @@ class InsertRule(RenameRule):
 
     def _build_ui(self, layout: QVBoxLayout):
         self._text_edit = QLineEdit()
-        self._text_edit.setPlaceholderText("Testo da inserire...")
-        layout.addWidget(QLabel("Testo da inserire:"))
+        self._text_edit.setPlaceholderText("Text to insert...")
+        layout.addWidget(QLabel("Text to insert:"))
         layout.addWidget(self._text_edit)
 
         self._where_combo = QComboBox()
         self._where_combo.addItems(["prefix", "suffix", "position", "after_text", "before_text", "replace"])
         self._where_combo.currentTextChanged.connect(self._on_where_change)
-        layout.addWidget(QLabel("Dove:"))
+        layout.addWidget(QLabel("Where:"))
         layout.addWidget(self._where_combo)
 
         self._pos_spin = QSpinBox()
         self._pos_spin.setRange(1, 9999)
         self._pos_spin.setValue(1)
-        layout.addWidget(QLabel("Posizione (1-based):"))
+        layout.addWidget(QLabel("Position (1-based):"))
         layout.addWidget(self._pos_spin)
 
         self._after_edit = QLineEdit()
-        self._after_edit.setPlaceholderText("Testo dopo cui inserire...")
+        self._after_edit.setPlaceholderText("Text to insert after...")
         self._after_edit.setVisible(False)
         layout.addWidget(self._after_edit)
 
         self._before_edit = QLineEdit()
-        self._before_edit.setPlaceholderText("Testo prima di cui inserire...")
+        self._before_edit.setPlaceholderText("Text to insert before...")
         self._before_edit.setVisible(False)
         layout.addWidget(self._before_edit)
 
-        self._skip_ext = QCheckBox("Salta estensione")
+        self._skip_ext = QCheckBox("Skip extension")
         layout.addWidget(self._skip_ext)
         self._on_where_change("prefix")
 

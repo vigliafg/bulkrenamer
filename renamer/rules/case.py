@@ -12,18 +12,18 @@ class CaseRule(RenameRule):
                 "force_fragments": "", "skip_extension": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Trasformazione:"))
+        layout.addWidget(QLabel("Transformation:"))
         self._mode = QComboBox()
         self._mode.addItems(["none", "lowercase", "uppercase", "title",
                               "invert", "first_capital", "sentence"])
         layout.addWidget(self._mode)
 
-        layout.addWidget(QLabel("Forza case per frammenti (separati da virgola):"))
+        layout.addWidget(QLabel("Force case for fragments (comma separated):"))
         self._force = QLineEdit()
-        self._force.setPlaceholderText("es: CD,DVD,SMS,PhD,iPad")
+        self._force.setPlaceholderText("e.g. CD,DVD,SMS,PhD,iPad")
         layout.addWidget(self._force)
 
-        self._skip = QCheckBox("Salta estensione")
+        self._skip = QCheckBox("Skip extension")
         layout.addWidget(self._skip)
 
     def get_config(self):

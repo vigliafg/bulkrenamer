@@ -12,17 +12,17 @@ class RegexRule(RenameRule):
                 "replacement": "", "count": 0}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Pattern regex:"))
+        layout.addWidget(QLabel("Regex pattern:"))
         self._pat = QLineEdit()
-        self._pat.setPlaceholderText("es: (\\d{4})-(\\d{2})-(\\d{2})")
+        self._pat.setPlaceholderText("e.g. (\\d{4})-(\\d{2})-(\\d{2})")
         layout.addWidget(self._pat)
 
-        layout.addWidget(QLabel("Sostituzione:"))
+        layout.addWidget(QLabel("Replacement:"))
         self._rep = QLineEdit()
-        self._rep.setPlaceholderText("es: \\3-\\2-\\1")
+        self._rep.setPlaceholderText("e.g. \\3-\\2-\\1")
         layout.addWidget(self._rep)
 
-        layout.addWidget(QLabel("Conteggio (0=illimitato):"))
+        layout.addWidget(QLabel("Count (0=unlimited):"))
         self._cnt = QSpinBox()
         self._cnt.setRange(0, 9999)
         layout.addWidget(self._cnt)

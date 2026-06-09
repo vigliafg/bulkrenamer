@@ -30,7 +30,7 @@ class UndoManager:
     def undo_last(self, file_list: list[str]) -> tuple[int, list[str]]:
         """Undo the last batch. Returns (restored_count, error_messages)."""
         if not self._stack:
-            return 0, ["Nessuna operazione da annullare."]
+            return 0, ["No operation to undo."]
 
         last = self._stack.pop()
         restored = 0
@@ -38,7 +38,7 @@ class UndoManager:
         for old_fp, new_fp in reversed(last):
             try:
                 if not os.path.exists(new_fp):
-                    errors.append(f"{os.path.basename(new_fp)}: file non trovato")
+                    errors.append(f"{os.path.basename(new_fp)}: file not found")
                     continue
                 os.rename(new_fp, old_fp)
                 if new_fp in file_list:

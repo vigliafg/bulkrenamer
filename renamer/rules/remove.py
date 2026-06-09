@@ -13,19 +13,19 @@ class RemoveRule(RenameRule):
                 "case_sensitive": False, "whole_words": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Testo da rimuovere (usa *|* per multipli):"))
+        layout.addWidget(QLabel("Text to remove (use *|* for multiple):"))
         self._text = QLineEdit()
-        self._text.setPlaceholderText("testo1*|*testo2")
+        self._text.setPlaceholderText("text1*|*text2")
         layout.addWidget(self._text)
 
-        layout.addWidget(QLabel("Occorrenze:"))
+        layout.addWidget(QLabel("Occurrences:"))
         self._occ = QComboBox()
         self._occ.addItems(["all", "first", "last"])
         layout.addWidget(self._occ)
 
         self._cs = QCheckBox("Case sensitive")
         layout.addWidget(self._cs)
-        self._ww = QCheckBox("Solo parole intere")
+        self._ww = QCheckBox("Whole words only")
         layout.addWidget(self._ww)
 
     def get_config(self):

@@ -13,27 +13,27 @@ class ReplaceRule(RenameRule):
                 "case_sensitive": False, "whole_words": False, "use_wildcards": False, "use_regex": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Trova (usa *|* per multipli):"))
+        layout.addWidget(QLabel("Find (use *|* for multiple):"))
         self._find = QLineEdit()
-        self._find.setPlaceholderText("trova1*|*trova2")
+        self._find.setPlaceholderText("find1*|*find2")
         layout.addWidget(self._find)
 
-        layout.addWidget(QLabel("Sostituisci:"))
+        layout.addWidget(QLabel("Replace with:"))
         self._replace = QLineEdit()
         layout.addWidget(self._replace)
 
-        layout.addWidget(QLabel("Occorrenze:"))
+        layout.addWidget(QLabel("Occurrences:"))
         self._occ = QComboBox()
         self._occ.addItems(["all", "first", "last"])
         layout.addWidget(self._occ)
 
         self._cs = QCheckBox("Case sensitive")
         layout.addWidget(self._cs)
-        self._ww = QCheckBox("Solo parole intere")
+        self._ww = QCheckBox("Whole words only")
         layout.addWidget(self._ww)
-        self._wc = QCheckBox("Interpreta wildcard (*, ?)")
+        self._wc = QCheckBox("Interpret wildcards (*, ?)")
         layout.addWidget(self._wc)
-        self._re = QCheckBox("Usa Regular Expression")
+        self._re = QCheckBox("Use Regular Expression")
         layout.addWidget(self._re)
 
     def get_config(self):

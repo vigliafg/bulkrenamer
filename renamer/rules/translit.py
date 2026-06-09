@@ -13,19 +13,19 @@ class TranslitRule(RenameRule):
                 "custom_map": [], "direction": "forward"}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Alfabeto / Lingua:"))
+        layout.addWidget(QLabel("Alphabet / Language:"))
         self._alpha = QComboBox()
-        self._alpha.addItem("(nessuno)")
+        self._alpha.addItem("(none)")
         for name in BUILTIN_TRANSLIT:
             self._alpha.addItem(name)
         layout.addWidget(self._alpha)
 
-        layout.addWidget(QLabel("Direzione:"))
+        layout.addWidget(QLabel("Direction:"))
         self._dir = QComboBox()
         self._dir.addItems(["forward", "backward"])
         layout.addWidget(self._dir)
 
-        layout.addWidget(QLabel("Mappa custom (src=dst, una per riga):"))
+        layout.addWidget(QLabel("Custom map (src=dst, one per line):"))
         self._custom = QTextEdit()
         self._custom.setPlaceholderText("ä=ae\nö=oe\nü=ue\nß=ss")
         self._custom.setMaximumHeight(100)
@@ -40,7 +40,7 @@ class TranslitRule(RenameRule):
                 if len(parts) == 2:
                     custom.append((parts[0], parts[1]))
         alphabet = self._alpha.currentText()
-        if alphabet == "(nessuno)":
+        if alphabet == "(none)":
             alphabet = ""
         return {"type": "Translit", "enabled": self.enabled(),
                 "alphabet": alphabet, "custom_map": custom,
@@ -49,7 +49,7 @@ class TranslitRule(RenameRule):
     def _push_config(self, config):
         if hasattr(self, '_alpha'):
             alpha = config.get('alphabet', '')
-            idx = self._alpha.findText(alpha if alpha else '(nessuno)')
+            idx = self._alpha.findText(alpha if alpha else '(none)')
             if idx >= 0: self._alpha.setCurrentIndex(idx)
         if hasattr(self, '_dir'):
             idx = self._dir.findText(config.get('direction', 'forward'))

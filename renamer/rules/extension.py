@@ -12,16 +12,16 @@ class ExtensionRule(RenameRule):
                 "append": False, "remove_duplicates": False, "case_sensitive": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Nuova estensione (senza punto):"))
+        layout.addWidget(QLabel("New extension (without dot):"))
         self._ext = QLineEdit()
-        self._ext.setPlaceholderText("es: txt, mp3, jpg")
+        self._ext.setPlaceholderText("e.g. txt, mp3, jpg")
         layout.addWidget(self._ext)
 
-        self._append = QCheckBox("Aggiungi al nome originale (non sostituire)")
+        self._append = QCheckBox("Append to original name (don't replace)")
         layout.addWidget(self._append)
-        self._rmdup = QCheckBox("Rimuovi estensioni duplicate")
+        self._rmdup = QCheckBox("Remove duplicate extensions")
         layout.addWidget(self._rmdup)
-        self._cs = QCheckBox("Case sensitive (per duplicati)")
+        self._cs = QCheckBox("Case sensitive (for duplicates)")
         layout.addWidget(self._cs)
 
     def get_config(self):

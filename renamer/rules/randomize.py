@@ -13,20 +13,20 @@ class RandomizeRule(RenameRule):
                 "where": "suffix", "separator": "_"}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Lunghezza sequenza casuale:"))
+        layout.addWidget(QLabel("Random sequence length:"))
         self._len = QSpinBox(); self._len.setRange(1, 256); self._len.setValue(8)
         layout.addWidget(self._len)
 
-        layout.addWidget(QLabel("Set caratteri:"))
+        layout.addWidget(QLabel("Character set:"))
         self._chars = QLineEdit()
         self._chars.setText("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         layout.addWidget(self._chars)
 
-        layout.addWidget(QLabel("Dove:"))
+        layout.addWidget(QLabel("Where:"))
         self._where = QComboBox(); self._where.addItems(["suffix", "prefix", "replace"])
         layout.addWidget(self._where)
 
-        layout.addWidget(QLabel("Separatore:"))
+        layout.addWidget(QLabel("Separator:"))
         self._sep = QLineEdit(); self._sep.setText("_")
         layout.addWidget(self._sep)
 

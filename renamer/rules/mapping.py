@@ -11,9 +11,9 @@ class MappingRule(RenameRule):
         return {"type": "Mapping", "enabled": True, "mappings": {}}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Mappa vecchio nome = nuovo nome (una coppia per riga):"))
+        layout.addWidget(QLabel("Map old name = new name (one pair per line):"))
         self._text = QTextEdit()
-        self._text.setPlaceholderText("vecchio_nome.txt = nuovo_nome.txt\nfile2.pdf = doc2.pdf")
+        self._text.setPlaceholderText("old_name.txt = new_name.txt\nfile2.pdf = doc2.pdf")
         layout.addWidget(self._text)
 
     def get_config(self):

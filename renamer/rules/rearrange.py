@@ -12,28 +12,28 @@ class RearrangeRule(RenameRule):
                 "delimiters": " - ", "positions": "", "new_pattern": "$1", "rtl": False}
 
     def _build_ui(self, layout: QVBoxLayout):
-        layout.addWidget(QLabel("Dividi usando:"))
+        layout.addWidget(QLabel("Split using:"))
         self._split = QComboBox()
         self._split.addItems(["delimiters", "positions", "exact pattern"])
         self._split.currentTextChanged.connect(self._on_split)
         layout.addWidget(self._split)
 
-        layout.addWidget(QLabel("Delimitatori (| per multipli):"))
+        layout.addWidget(QLabel("Delimiters (| for multiple):"))
         self._delims = QLineEdit()
         self._delims.setText(" - ")
         layout.addWidget(self._delims)
 
-        layout.addWidget(QLabel("Posizioni (| per multipli) — solo per 'positions':"))
+        layout.addWidget(QLabel("Positions (| for multiple) — only for 'positions':"))
         self._positions = QLineEdit()
         self._positions.setVisible(False)
         layout.addWidget(self._positions)
 
-        layout.addWidget(QLabel("Nuovo pattern ($1, $2, ..., $0=nome intero):"))
+        layout.addWidget(QLabel("New pattern ($1, $2, ..., $0=full name):"))
         self._pattern = QLineEdit()
         self._pattern.setText("$1")
         layout.addWidget(self._pattern)
 
-        self._rtl = QCheckBox("Da destra a sinistra")
+        self._rtl = QCheckBox("Right to left")
         layout.addWidget(self._rtl)
         self._on_split("delimiters")
 
