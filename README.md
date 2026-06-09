@@ -23,6 +23,14 @@ L'interfaccia è ispirata a [ReNamer](https://den4b.com) con tema scuro **Catppu
 - Python **3.10 o superiore**
 - pip
 
+### Dipendenze
+
+L'unica dipendenza esterna è **PyQt6** (≥ 6.5). Tutto il resto è Python standard library.
+
+| Pacchetto | Versione minima | Uso |
+|-----------|----------------|-----|
+| [PyQt6](https://pypi.org/project/PyQt6/) | ≥ 6.5 | GUI completa (finestre, widget, tabelle, splitter, menù) |
+
 ### Setup
 
 ```bash
@@ -36,7 +44,7 @@ source .venv/bin/activate   # Linux/macOS
 # .venv\Scripts\activate    # Windows
 
 # 3. Installa le dipendenze
-pip install PyQt6
+pip install -r requirements.txt
 ```
 
 ### Avvio
