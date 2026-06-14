@@ -193,6 +193,7 @@ bulkrenamer/
 ├── install-linux.sh         # 🐧 Linux: one-command installer + global launcher
 ├── install-macos.sh         # 🍎 macOS: one-command installer + global launcher
 ├── install-windows.ps1      # 🪟 Windows: one-command installer + global launcher
+├── test_engine.py           # 🧪 Unit tests: 93 tests covering all engine functions
 ├── renamer/
 │   ├── app.py               # MainWindow: menus, toolbar, splitter, status bar
 │   ├── engine.py            # Rename engine (pure logic, zero GUI)
@@ -220,6 +221,28 @@ bulkrenamer/
 │       ├── user_input.py    # 📋 User Input
 │       └── mapping.py       # 🗺 Mapping
 ```
+
+---
+
+---
+
+## Running Tests
+
+The project includes a comprehensive test suite (`test_engine.py`) with **93 unit + end‑to‑end tests** covering:
+
+- Every engine function (`_apply_strip`, `_apply_delete`, `_apply_mapping`, `_apply_user_input`, etc.)
+- `apply_rules_stack` with rule combinations, ordering, disabled rules, and meta‑tokens
+- Bug‑fix regression cases (invert flag, full‑name matching, `keep_delimiters`, Path‑based split)
+
+```bash
+# Run all 93 tests
+python3 -m unittest test_engine.py -v
+
+# Or with pytest (optional — pip install pytest)
+python3 -m pytest test_engine.py -v
+```
+
+All tests use only the Python standard library — no extra dependencies needed.
 
 ---
 

@@ -34,5 +34,14 @@ ENV/
 # Logs
 *.log
 
+# Test / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary
+*.tmp
+tmp/
+
 # OS
 Thumbs.db

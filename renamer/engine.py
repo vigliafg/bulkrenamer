@@ -35,9 +35,9 @@ def apply_rules_stack(
         elif rule_type == "Extension":
             ext = _apply_extension(ext, stem, cfg)
         elif rule_type == "Strip":
-            stem = _apply_strip(stem, ext, cfg)
+            stem = _apply_strip(stem, cfg)
         elif rule_type == "Case":
-            stem = _apply_case(stem, ext, cfg)
+            stem = _apply_case(stem, cfg)
         elif rule_type == "Serialize":
             stem = _apply_serialize(stem, ext, cfg, index)
         elif rule_type == "Randomize":
@@ -45,17 +45,23 @@ def apply_rules_stack(
         elif rule_type == "Padding":
             stem = _apply_padding(stem, ext, cfg)
         elif rule_type == "CleanUp":
-            stem = _apply_cleanup(stem, ext, cfg)
+            stem = _apply_cleanup(stem, cfg)
         elif rule_type == "Translit":
-            stem = _apply_translit(stem, ext, cfg)
+            stem = _apply_translit(stem, cfg)
         elif rule_type == "ReformatDate":
-            stem = _apply_reformat_date(stem, ext, cfg)
+            stem = _apply_reformat_date(stem, cfg)
         elif rule_type == "Regex":
-            stem = _apply_regex(stem, ext, cfg)
+            stem = _apply_regex(stem, cfg)
         elif rule_type == "UserInput":
-            stem = _apply_user_input(stem, ext, index, cfg)
+            new_name = _apply_user_input(stem, ext, index, cfg)
+            if new_name != stem:
+                stem = Path(new_name).stem
+                ext = Path(new_name).suffix or ext
         elif rule_type == "Mapping":
-            stem = _apply_mapping(stem, index, cfg)
+            new_name = _apply_mapping(stem, ext, index, cfg)
+            if new_name != stem:
+                stem = Path(new_name).stem
+                ext = Path(new_name).suffix or ext
     return stem + ext
 
 
@@ -80,18 +86,12 @@ def _expand_meta(s: str, filepath: str, index: int, total: int) -> str:
 
 # ── Individual rule implementations ──────────────────────────────────────────
 
-def _skip_ext(stem: str, ext: str, cfg: dict, fn):
-    """Apply fn to stem, then optionally skip extension."""
-    return fn(stem)
-
-
 def _apply_insert(stem, ext, filepath, cfg, index, total):
     text = _expand_meta(cfg.get("text", ""), filepath, index, total)
     where = cfg.get("where", "prefix")
     position = cfg.get("position", 1)
     after_text = cfg.get("after_text", "")
     before_text = cfg.get("before_text", "")
-    skip_ext = cfg.get("skip_extension", False)
     target = stem
     if where == "prefix":
         return text + target
@@ -120,7 +120,6 @@ def _apply_delete(stem, ext, cfg):
     mode_until = cfg.get("until_mode", "count")
     from_val = cfg.get("from_val", 1)
     until_val = cfg.get("until_val", 0)
-    skip_ext = cfg.get("skip_extension", False)
     rtl = cfg.get("rtl", False)
     keep_delims = cfg.get("keep_delimiters", False)
     target = stem
@@ -131,9 +130,7 @@ def _apply_delete(stem, ext, cfg):
     elif mode_from == "delimiter":
         delim = cfg.get("from_delim", "")
         idx = target.find(delim)
-        start = idx if idx >= 0 else 0
-        if not keep_delims and idx >= 0:
-            start = idx
+        start = idx + (len(delim) if keep_delims else 0) if idx >= 0 else 0
     else:
         start = 0
 
@@ -235,7 +232,6 @@ def _apply_rearrange(stem, ext, filepath, cfg, index, total):
     delimiters = cfg.get("delimiters", " - ")
     positions_str = cfg.get("positions", "")
     new_pattern = cfg.get("new_pattern", "$1")
-    skip_ext = cfg.get("skip_extension", False)
     rtl = cfg.get("rtl", False)
 
     # Split the name
@@ -309,7 +305,7 @@ def _apply_extension(stem, ext, cfg):
     return ext
 
 
-def _apply_strip(stem, ext, cfg):
+def _apply_strip(stem, cfg):
     chars = cfg.get("chars", "")
     sets = cfg.get("sets", [])  # list of predefined sets: digits, symbols, english, brackets
     positioning = cfg.get("positioning", "everywhere")
@@ -342,12 +338,12 @@ def _apply_strip(stem, ext, cfg):
         # Keep only the specified chars
         if positioning == "leading":
             i = 0
-            while i < len(stem) and stem[i] in remove_set:
+            while i < len(stem) and stem[i] not in remove_set:
                 i += 1
             return stem[i:]
         elif positioning == "trailing":
             i = len(stem) - 1
-            while i >= 0 and stem[i] in remove_set:
+            while i >= 0 and stem[i] not in remove_set:
                 i -= 1
             return stem[:i + 1]
         else:
@@ -367,10 +363,9 @@ def _apply_strip(stem, ext, cfg):
             return "".join(ch for ch in stem if ch not in remove_set)
 
 
-def _apply_case(stem, ext, cfg):
+def _apply_case(stem, cfg):
     mode = cfg.get("case_mode", "none")
     force_fragments = cfg.get("force_fragments", "")
-    skip_ext = cfg.get("skip_extension", False)
 
     if mode == "lowercase":
         stem = stem.lower()
@@ -411,7 +406,6 @@ def _apply_serialize(stem, ext, cfg, index):
     start = cfg.get("index_start", 1)
     step = cfg.get("step", 1)
     repeat = cfg.get("repeat", 1)
-    reset_every = cfg.get("reset_every", 0)
     padding = cfg.get("pad_to_length", 0)
     where = cfg.get("where", "suffix")
     sep = cfg.get("separator", "_")
@@ -519,7 +513,7 @@ def _apply_padding(stem, ext, cfg):
     return stem
 
 
-def _apply_cleanup(stem, ext, cfg):
+def _apply_cleanup(stem, cfg):
     strip_brackets = cfg.get("strip_brackets", [])  # list: round, square, curly
     replace_with_space = cfg.get("replace_with_space", "")
     fix_spaces = cfg.get("fix_spaces", True)
@@ -637,7 +631,7 @@ BUILTIN_TRANSLIT: dict[str, list[tuple[str, str]]] = {
 }
 
 
-def _apply_translit(stem, ext, cfg):
+def _apply_translit(stem, cfg):
     alphabet_name = cfg.get("alphabet", "")
     custom_map = cfg.get("custom_map", [])
     direction = cfg.get("direction", "forward")
@@ -659,7 +653,7 @@ def _apply_translit(stem, ext, cfg):
     return result
 
 
-def _apply_reformat_date(stem, ext, cfg):
+def _apply_reformat_date(stem, cfg):
     find_pattern = cfg.get("find_pattern", r"\d{4}-\d{2}-\d{2}")
     output_format = cfg.get("output_format", "%Y%m%d")
     try:
@@ -681,7 +675,7 @@ def _apply_reformat_date(stem, ext, cfg):
     return stem
 
 
-def _apply_regex(stem, ext, cfg):
+def _apply_regex(stem, cfg):
     pattern = cfg.get("pattern", "")
     replacement = cfg.get("replacement", "")
     count = cfg.get("count", 0)  # 0 = all
@@ -700,10 +694,14 @@ def _apply_user_input(stem, ext, index, cfg):
     return stem
 
 
-def _apply_mapping(stem, index, cfg):
+def _apply_mapping(stem, ext, index, cfg):
     mappings = cfg.get("mappings", {})  # dict of old_name -> new_name
-    current = stem  # Note: this works on stem only; for full name mapping see below
-    if current in mappings:
-        return mappings[current]
+    full_name = stem + ext
+    if full_name in mappings:
+        # Match full filename (with extension)
+        return mappings[full_name]
+    if stem in mappings:
+        # Fallback: match stem only (backward compat)
+        return mappings[stem]
     return stem
 
