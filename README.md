@@ -18,13 +18,71 @@ The interface is inspired by [ReNamer](https://den4b.com) with a **Catppuccin Mo
 
 ## Installation
 
-### Requirements
+### ⚡ One-Command Install (Recommended)
+
+Use the platform-specific install script. It sets up everything automatically — virtual environment, dependencies, and a **global `bulk-renamer` command** you can run from any terminal.
+
+| Platform | Script | Command |
+|----------|--------|---------|
+| 🐧 **Linux** | [`install-linux.sh`](install-linux.sh) | `bash install-linux.sh` |
+| 🍎 **macOS** | [`install-macos.sh`](install-macos.sh) | `bash install-macos.sh` |
+| 🪟 **Windows** | [`install-windows.ps1`](install-windows.ps1) | `powershell -File install-windows.ps1` |
+
+#### What each script does
+
+1. **Checks prerequisites** — Python 3.10+, pip, git (Xcode CLT on macOS)
+2. **Installs the project** into a user-local directory:
+   - Linux/macOS: `~/.local/share/bulk-renamer/`
+   - Windows: `%LOCALAPPDATA%\bulk-renamer\`
+3. **Creates a virtual environment** and installs PyQt6 + dependencies
+4. **Creates a global launcher** named `bulk-renamer`:
+   - Linux: `~/.local/bin/bulk-renamer`
+   - macOS: `/usr/local/bin/bulk-renamer`
+   - Windows: `%LOCALAPPDATA%\Microsoft\WindowsApps\bulk-renamer.cmd`
+5. **Adds the launcher to your PATH** so `bulk-renamer` works from any terminal
+
+#### Step-by-step
+
+```bash
+# 1. Clone the repository
+git clone <repo-url>
+cd bulkrenamer
+
+# 2. Run the install script for your OS
+# Linux:
+bash install-linux.sh
+
+# macOS:
+bash install-macos.sh
+
+# Windows (PowerShell — open as normal user, NOT as Administrator):
+#   If you get a script execution policy error, first run:
+#   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+powershell -File install-windows.ps1
+
+# 3. Restart your terminal (or run 'source ~/.bashrc' / 'source ~/.zshrc')
+
+# 4. Launch from anywhere!
+bulk-renamer
+```
+
+The application starts with one default rule ready to use.
+
+> **Note for Windows**: if `bulk-renamer` is not found after installation, open a **new** PowerShell/CMD window so the PATH change takes effect.
+
+---
+
+### 🛠 Manual Setup (Alternative)
+
+If you prefer to set up manually or the install script is not suitable:
+
+#### Requirements
 
 - **Python 3.10 or higher**
 - **pip** (included with Python)
 - **git** (to clone the repository)
 
-### Dependencies
+#### Dependencies
 
 The only external dependency is **PyQt6** (≥ 6.5). Everything else is Python standard library.
 
@@ -32,7 +90,7 @@ The only external dependency is **PyQt6** (≥ 6.5). Everything else is Python s
 |---------|----------------|---------|
 | [PyQt6](https://pypi.org/project/PyQt6/) | ≥ 6.5 | Full GUI (windows, widgets, tables, splitter, menus) |
 
-### Quick setup (all platforms)
+#### Setup
 
 ```bash
 # 1. Clone the repository
@@ -50,17 +108,12 @@ python -m venv .venv
 
 # 3. Install dependencies
 pip install -r requirements.txt
-```
 
-### Launch
-
-```bash
+# 4. Launch
 python main.py
 # or, on Linux/macOS:
 python3 main.py
 ```
-
-The application starts with one default rule ready to use.
 
 ---
 
@@ -137,6 +190,9 @@ Save the current rule configuration to a `.json` file (`File → Save Preset`) a
 bulkrenamer/
 ├── main.py                  # Application entry point
 ├── requirements.txt         # Pip dependencies
+├── install-linux.sh         # 🐧 Linux: one-command installer + global launcher
+├── install-macos.sh         # 🍎 macOS: one-command installer + global launcher
+├── install-windows.ps1      # 🪟 Windows: one-command installer + global launcher
 ├── renamer/
 │   ├── app.py               # MainWindow: menus, toolbar, splitter, status bar
 │   ├── engine.py            # Rename engine (pure logic, zero GUI)

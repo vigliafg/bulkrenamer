@@ -24,9 +24,15 @@ ENV/
 *~
 .DS_Store
 
+# Build
+*.spec
+
 # Project-specific
 *.json
 !preset_esempio.json
+
+# Logs
+*.log
 
 # OS
 Thumbs.db
