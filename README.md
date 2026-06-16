@@ -5,6 +5,38 @@
 ![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
 ![PyQt6](https://img.shields.io/badge/PyQt-6-green.svg)
 ![Theme](https://img.shields.io/badge/Theme-Catppuccin%20Mocha-mauve.svg)
+![Build](https://img.shields.io/github/actions/workflow/status/vigliafg/bulkrenamer/build.yml?branch=main&label=build)
+![Release](https://img.shields.io/github/v/release/vigliafg/bulkrenamer?color=blue)
+![License](https://img.shields.io/github/license/vigliafg/bulkrenamer)
+
+---
+
+## 🚀 Download Pre-built Executables
+
+**No Python required!** Get the latest standalone executables from the [Releases page](https://github.com/vigliafg/bulkrenamer/releases).
+
+| Platform | File |
+|----------|------|
+| 🐧 **Linux** x64 | `BulkRenamerPRO-linux-x64` |
+| 🪟 **Windows** x64 | `BulkRenamerPRO-windows-x64.exe` |
+| 🍎 **macOS** ARM64 | `BulkRenamerPRO-macos-arm64` |
+
+### Quick start
+
+**Linux:**
+```bash
+chmod +x BulkRenamerPRO-linux-x64
+./BulkRenamerPRO-linux-x64
+```
+
+**macOS:**
+```bash
+chmod +x BulkRenamerPRO-macos-arm64
+xattr -cr BulkRenamerPRO-macos-arm64
+./BulkRenamerPRO-macos-arm64
+```
+
+**Windows:** double-click `BulkRenamerPRO-windows-x64.exe`.
 
 ---
 
@@ -263,6 +295,29 @@ python3 bulk_renamer_pro.py   # more advanced version
 ```
 
 The current version (`main.py` + `renamer/` folder) is the only one in active development.
+
+---
+
+## 🏗️ Automated Builds (CI/CD)
+
+Every push to `main` triggers an automated build via **GitHub Actions** that produces standalone executables for all three platforms with **PyInstaller** `--onefile`.
+
+| Platform | Runner | Architecture |
+|----------|--------|--------------|
+| 🐧 Linux | `ubuntu-24.04` | x86_64 |
+| 🪟 Windows | `windows-2022` | x86_64 |
+| 🍎 macOS | `macos-latest` | ARM64 (Apple Silicon) |
+
+### Creating a release
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Tagging triggers a build that automatically creates a **GitHub Release** with all three binaries attached — ready for download.
+
+The workflow is defined in [`.github/workflows/build.yml`](.github/workflows/build.yml).
 
 ---
 
@@ -680,7 +735,7 @@ SectionEnd
 
 ## License
 
-This project is open source. Feel free to use, modify, and distribute it.
+MIT License — see [LICENSE](LICENSE) for full text.
 
 ---
 
