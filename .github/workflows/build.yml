@@ -85,19 +85,11 @@ jobs:
             --hidden-import PyQt6.QtWidgets \
             main.py
 
-      - name: Normalize macOS .app bundle
-        if: runner.os == 'macOS'
-        shell: bash
-        run: |
-          if [ -d "dist/BulkRenamerPRO.app" ]; then
-            mv "dist/BulkRenamerPRO.app" "dist/BulkRenamerPRO"
-          fi
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: bulkrenamer-${{ matrix.name }}
-          path: dist/BulkRenamerPRO${{ runner.os == 'Windows' && '.exe' || '' }}
+          path: dist/BulkRenamerPRO*
           if-no-files-found: error
 
   release:
