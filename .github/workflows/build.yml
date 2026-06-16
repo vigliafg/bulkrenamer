@@ -80,11 +80,20 @@ jobs:
             --hidden-import PyQt6.QtWidgets \
             main.py
 
+      - name: Rename binary with platform suffix
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            mv dist/BulkRenamerPRO.exe "dist/BulkRenamerPRO-${{ matrix.name }}.exe"
+          else
+            mv dist/BulkRenamerPRO "dist/BulkRenamerPRO-${{ matrix.name }}"
+          fi
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: bulkrenamer-${{ matrix.name }}
-          path: dist/BulkRenamerPRO*
+          path: dist/BulkRenamerPRO-${{ matrix.name }}${{ runner.os == 'Windows' && '.exe' || '' }}
           if-no-files-found: error
 
   release:
