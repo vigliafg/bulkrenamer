@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     tags: ['v*']
+    paths-ignore: ['**.md', 'LICENSE', '.gitignore']
   pull_request:
     branches: [main]
 
@@ -19,31 +20,23 @@ jobs:
         include:
           - os: ubuntu-24.04
             name: linux-x64
-            artifact: BulkRenamerPRO
             add_data_sep: ':'
             gui_flag: ''
-            ext: ''
 
           - os: windows-2022
             name: windows-x64
-            artifact: BulkRenamerPRO.exe
             add_data_sep: ';'
             gui_flag: '--noconsole'
-            ext: '.exe'
 
           - os: macos-13
             name: macos-x64
-            artifact: BulkRenamerPRO
             add_data_sep: ':'
             gui_flag: '--windowed'
-            ext: ''
 
           - os: macos-latest
             name: macos-arm64
-            artifact: BulkRenamerPRO
             add_data_sep: ':'
             gui_flag: '--windowed'
-            ext: ''
 
     runs-on: ${{ matrix.os }}
 
@@ -55,6 +48,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
@@ -75,6 +76,7 @@ jobs:
         run: |
           pyinstaller \
             --onefile \
+            --clean \
             ${{ matrix.gui_flag }} \
             --name BulkRenamerPRO \
             --add-data "renamer${{ matrix.add_data_sep }}renamer" \
@@ -83,11 +85,19 @@ jobs:
             --hidden-import PyQt6.QtWidgets \
             main.py
 
+      - name: Normalize macOS .app bundle
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          if [ -d "dist/BulkRenamerPRO.app" ]; then
+            mv "dist/BulkRenamerPRO.app" "dist/BulkRenamerPRO"
+          fi
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: bulkrenamer-${{ matrix.name }}
-          path: dist/${{ matrix.artifact }}
+          path: dist/BulkRenamerPRO${{ runner.os == 'Windows' && '.exe' || '' }}
           if-no-files-found: error
 
   release:
