@@ -29,6 +29,7 @@ ENV/
 
 # Build
 *.spec
+build-artifacts/
 
 # Project-specific
 *.json
